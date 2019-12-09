@@ -2,12 +2,13 @@
  *  for more visit: www.piysocial.weebly.com/theanticollider.html
  */
 
+//pins define
 int trigPin = 5;
 int echoPin = 6;
-int ledRed = 2;
+int ledRed = 13;
 int ledYellow = 4;
 int ledGreen = 3;
-int ledred = 13;
+int ledred = 2;
 int pwmA = 9;
 int M0 = 7;
 int M1 = 8;
@@ -18,40 +19,50 @@ int i = 225;
 int j = 225;
 
 
-void setup() {
+void setup() 
+{
   Serial.begin(9600); 
+  /////////INDICATORS//////////
    pinMode(ledRed, OUTPUT);
    pinMode(ledYellow, OUTPUT);
    pinMode(ledGreen, OUTPUT);
    pinMode(ledred, OUTPUT);
+   
+  ///////MOTORS///////////
   
    pinMode(M0, OUTPUT);
    pinMode(M1, OUTPUT);
    pinMode(M2, OUTPUT);
    pinMode(M3, OUTPUT);
+
+  //////////SENSOR/////////
   
    pinMode(echoPin, INPUT);
    pinMode(trigPin, OUTPUT);
+  
+  //////SPEED OF MOTOR//////
 
    analogWrite(pwmA,i);
    analogWrite(pwmB,j);
-  // put your setup code here, to run once:
+  
 }
+
+//////////INDICATORS(BUZZERS)///////////
 
 void buzzer()
 {
-  digitalWrite(ledRed, HIGH);   // turn the LED on (HIGH is the voltage level)
-  delay(100);                       // wait for a second
-  digitalWrite(ledRed, LOW);    // turn the LED off by making the voltage LOW
-  delay(100);                       // wait for a second
+  digitalWrite(ledRed, HIGH);  
+  delay(100);                       
+  digitalWrite(ledRed, LOW);    
+  delay(100);                       
 }
 
 void buzzer1()
 {
-  digitalWrite(ledRed, HIGH);   // turn the LED on (HIGH is the voltage level)
-  delay(300);                       // wait for a second
-  digitalWrite(ledRed, LOW);    // turn the LED off by making the voltage LOW
-  delay(300);                       // wait for a second
+  digitalWrite(ledRed, HIGH);  
+  delay(300);                       
+  digitalWrite(ledRed, LOW);    
+  delay(300);                    
 }
 
 void buzzer2()
@@ -61,6 +72,8 @@ void buzzer2()
   digitalWrite(ledRed, LOW);  
   delay(50);   
 }
+
+////////////MOTOR MOTION////////////
 
 void motorForward()
 {
@@ -78,6 +91,8 @@ void motorStop()
   digitalWrite(M3,LOW);
 }
 
+////////////LOOP////////////
+
 void loop() {
   long duration, distance;
   digitalWrite(trigPin,HIGH);
@@ -94,34 +109,38 @@ if ((distance<=25))
   motorStop();
   digitalWrite(ledRed,HIGH);
   digitalWrite(ledred, HIGH);
+ delay(100);
 }
-else if((distance>25 && distance<=30))
+else if((distance>25 && distance<=40))
  {
   digitalWrite(ledred, HIGH);
   digitalWrite(ledYellow, LOW);
   digitalWrite(ledGreen, LOW);
+  digitalWrite(ledRed,LOW);
   buzzer2();
   motorForward();
   analogWrite(pwmA,i-100);
   analogWrite(pwmB,j-100);
   Serial.println("STOP, Else you'll get collided with the front vehicle");
  }
-else if((distance>30 && distance<=49))
+else if((distance>40 && distance<=69))
  {
   digitalWrite(ledYellow, HIGH);
   digitalWrite(ledred,LOW);
   digitalWrite(ledGreen, LOW);
+  digitalWrite(ledRed,LOW);
   buzzer();
   motorForward();
   analogWrite(pwmA,i-50);
   analogWrite(pwmB,j-50);
   Serial.println("SLOW DOWN YOUR VEHICLE!!!!!!");
  }
-else if((distance>50 && distance<100))
+else if((distance>70 && distance<100))
  {
   digitalWrite(ledGreen, HIGH);
   digitalWrite(ledred,LOW);
   digitalWrite(ledYellow, LOW);
+  digitalWrite(ledRed,LOW);
   buzzer1();
   motorForward();
   analogWrite(pwmA,i-25);
@@ -136,5 +155,14 @@ else if ((distance>100))
   digitalWrite(ledGreen, LOW);
   digitalWrite(ledred,LOW);
   digitalWrite(ledYellow, LOW);
+  digitalWrite(ledRed,LOW);
 }
 }
+
+/*
+ * For code, visit https://github.com/saswatsamal/anticollider
+ */
+
+/*
+ * Siksha 'O' Anusandhan (Deemed to be) University
+ */
