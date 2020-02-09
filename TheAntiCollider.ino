@@ -1,19 +1,18 @@
-/* The code of Anti Collider of Saswat Samal (PIYSOCIAL)
- *  for more visit: www.piysocial.weebly.com/theanticollider.html
- */
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+LiquidCrystal_I2C lcd( 0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);
 
-//pins define
-int trigPin = 5;
-int echoPin = 6;
+int trigPin = 6;
+int echoPin = 5;
 int ledRed = 13;
 int ledYellow = 4;
 int ledGreen = 3;
 int ledred = 2;
 int pwmA = 9;
-int M0 = 7;
-int M1 = 8;
-int M2 = 11;
-int M3 = 12;
+int M0 = 8;
+int M1 = 7;
+int M2 = 12;
+int M3 = 11;
 int pwmB = 10;
 int i = 225;
 int j = 225;
@@ -22,6 +21,7 @@ int j = 225;
 void setup() 
 {
   Serial.begin(9600); 
+  lcd.begin(16, 2); 
   /////////INDICATORS//////////
    pinMode(ledRed, OUTPUT);
    pinMode(ledYellow, OUTPUT);
@@ -43,8 +43,7 @@ void setup()
   //////SPEED OF MOTOR//////
 
    analogWrite(pwmA,i);
-   analogWrite(pwmB,j);
-  
+   analogWrite(pwmB,j);  
 }
 
 //////////INDICATORS(BUZZERS)///////////
@@ -89,6 +88,7 @@ void motorStop()
   digitalWrite(M1,LOW);
   digitalWrite(M2,LOW);
   digitalWrite(M3,LOW);
+
 }
 
 ////////////LOOP////////////
@@ -103,6 +103,11 @@ void loop() {
   Serial.print(distance);
   Serial.println("CM");
   delay(10);
+  lcd.print("Distance:");
+  lcd.print(distance);
+  lcd.print("CM");
+  lcd.setCursor(0, 1); 
+  delay(100);
 
 if ((distance<=25))
 {
@@ -110,6 +115,10 @@ if ((distance<=25))
   digitalWrite(ledRed,HIGH);
   digitalWrite(ledred, HIGH);
  delay(100);
+ lcd.print("STOP");
+ lcd.setCursor(0, 0); 
+ delay(500);
+ lcd.clear();
 }
 else if((distance>25 && distance<=40))
  {
@@ -119,9 +128,14 @@ else if((distance>25 && distance<=40))
   digitalWrite(ledRed,LOW);
   buzzer2();
   motorForward();
-  analogWrite(pwmA,i-100);
-  analogWrite(pwmB,j-100);
+  analogWrite(pwmA,100); // speed on the left wheel
+  analogWrite(pwmB,100); // speen on the right wheel
+  // the speed will be calculated from the odometer...
   Serial.println("STOP, Else you'll get collided with the front vehicle");
+lcd.print("SLOW DOWN");
+lcd.setCursor(0, 0); 
+delay(1000);
+lcd.clear();
  }
 else if((distance>40 && distance<=69))
  {
@@ -131,9 +145,13 @@ else if((distance>40 && distance<=69))
   digitalWrite(ledRed,LOW);
   buzzer();
   motorForward();
-  analogWrite(pwmA,i-50);
-  analogWrite(pwmB,j-50);
+  analogWrite(pwmA,150);
+  analogWrite(pwmB,150);
   Serial.println("SLOW DOWN YOUR VEHICLE!!!!!!");
+  lcd.print("SLOW DOWN NOW");
+  lcd.setCursor(0, 0); 
+ delay(1000);
+  lcd.clear();
  }
 else if((distance>70 && distance<100))
  {
@@ -142,10 +160,14 @@ else if((distance>70 && distance<100))
   digitalWrite(ledYellow, LOW);
   digitalWrite(ledRed,LOW);
   buzzer1();
+  analogWrite(pwmA,220);
+  analogWrite(pwmB,220);
   motorForward();
-  analogWrite(pwmA,i-25);
-  analogWrite(pwmB,j-25);
   Serial.println("Vehicle Ahead, Move Slowly");
+  lcd.print("MOVE SLOWLY");
+  lcd.setCursor(0, 0); 
+ delay(1000);
+  lcd.clear();
  }
 else if ((distance>100))
 {
@@ -156,13 +178,13 @@ else if ((distance>100))
   digitalWrite(ledred,LOW);
   digitalWrite(ledYellow, LOW);
   digitalWrite(ledRed,LOW);
+  lcd.print("DRIVE SAFE");
+  lcd.setCursor(0, 1); 
+  delay(1000);
+  lcd.print("OBEY TRAFFIC");
+  lcd.setCursor(0, 0); 
+  delay(1000);
+  lcd.clear();
+
 }
 }
-
-/*
- * For code, visit https://github.com/saswatsamal/anticollider
- */
-
-/*
- * Siksha 'O' Anusandhan (Deemed to be) University
- */
